@@ -1,6 +1,6 @@
-# XNum
+# .
 
-XNum is a web application designed to solve numerical methods. It is a simple application with a great user interface and is responsive for use on any device.
+. is a web application designed to solve numerical methods. It is a simple application with a great user interface and is responsive for use on any device.
 
 The methods that our application solves are:
 - Bisection Method
