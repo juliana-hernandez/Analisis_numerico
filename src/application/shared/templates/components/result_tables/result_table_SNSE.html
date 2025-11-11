@@ -1,0 +1,27 @@
+{% if template_data.table %}
+  <div class="table-responsive">
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">i</th>
+          {% for i in template_data.indexes %}
+            <th scope="col">X<sub>{{ i }}</sub></th>
+          {% endfor %}
+          <th scope="col">Error</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for key, row in template_data.table.items %}
+          <tr class="{% if forloop.last %}table-warning{% endif %}">
+            <th scope="row">{{ row.iteration }}</th>
+            {% for x_value in row.X %}
+              <td>{{ x_value }}</td>
+            {% endfor %}
+            <td>{{ row.Error }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endif %}
+

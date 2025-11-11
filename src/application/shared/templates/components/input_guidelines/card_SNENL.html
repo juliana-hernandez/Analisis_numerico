@@ -1,0 +1,170 @@
+<div class="card mb-5">
+  <h5 class="card-header text-center">Guía para ingresar los parámetros al método</h5>
+  <div class="card-body">
+    <div class="container">
+      <div class="row center-container">
+        <div class="col-md-offset-1 col-md-10">
+          <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <a class="panel panel-default first" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              <div class="panel-heading clickable-panel" role="tab" id="headingOne">
+                <h5 class="panel-title">Operadores matemáticos básicos</h5>
+              </div>
+            </a>
+            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body not-clickable inside">
+                <ul class="list-unstyled">
+                  <li class="mb-3">
+                    <strong>Suma (<code>+</code>)</strong>: Usa el signo de suma entre los términos.<ul>
+                      <li>
+                        Ejemplo: <code>x + 2</code>
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="mb-3">
+                    <strong>Resta (<code>-</code>)</strong>: Usa el signo de resta.<ul>
+                      <li>
+                        Ejemplo: <code>x - 5</code>
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="mb-3">
+                    <strong>Multiplicación (<code>*</code>)</strong>: Usa el asterisco para multiplicar.<ul>
+                      <li>
+                        Ejemplo: <code>2 * x</code>, <code>x * 3</code>
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="mb-3">
+                    <strong>División (<code>/</code>)</strong>: Usa la barra inclinada.<ul>
+                      <li>
+                        Ejemplo: <code>x / 4</code>, <code>5 / (x + 1)</code>
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="mb-3">
+                    <strong>Exponentes (<code>**</code>)</strong>: Usa doble asterisco para elevar a una potencia.<ul>
+                      <li>
+                        Ejemplo: <code>x ** 2</code> (x al cuadrado), <code>x ** 3</code> (x al cubo)
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row center-container">
+        <div class="col-md-offset-1 col-md-10">
+          <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <a class="panel panel-default first" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+              <div class="panel-heading clickable-panel" role="tab" id="headingOne">
+                <h5 class="panel-title">Funciones Matemáticas Comunes</h5>
+              </div>
+            </a>
+            <div id="collapseTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body not-clickable inside">
+                <p>Debes usar las funciones matemáticas estándar de Python, como las siguientes:</p>
+                <ul>
+                  <li>
+                    <code>math.sin(x)</code>: Función seno.
+                  </li>
+                  <li>
+                    <code>math.cos(x)</code>: Función coseno.
+                  </li>
+                  <li>
+                    <code>math.tan(x)</code>: Función tangente.
+                  </li>
+                  <li>
+                    <code>math.log(x)</code>: Logaritmo natural (base e).
+                  </li>
+                  <li>
+                    <code>math.log10(x)</code>: Logaritmo en base 10.
+                  </li>
+                  <li>
+                    <code>math.sqrt(x)</code>: Raíz cuadrada.(si se quiere hacer otra típo de raíz, utilizar operador <code>**</code> para hacer la representación adecuada en vez de utilizar <code>math.sqrt</code>)
+                  </li>
+                  <li>
+                    <code>math.exp(x)</code>: Exponencial de base <code>e</code> (elevado a la potencia de <code>x</code> o de lo que se requiera).
+                  </li>
+                </ul>
+                <p class="section-title">Ejemplos:</p>
+                <ul>
+                  <li>
+                    <code>math.sin(x)</code> para el seno de x.
+                  </li>
+                  <li>
+                    <code>math.log(x + 1)</code> para el logaritmo natural de (x + 1).
+                  </li>
+                  <li>
+                    <code>math.sqrt(x ** 2 + 1)</code> para la raíz cuadrada de (x² + 1).
+                  </li>
+                  <li>
+                    <code>x ** (1/n)</code> para calcular la raíz <code>n</code>-ésima de
+                    <code>x</code>.
+                  </li>
+                </ul>
+                <p>
+                  Si desea conocer mas funciones, puede ingresar directamente a la documentación de la libraria <a href="https://docs.python.org/3/library/math.html">Math</a> de Python.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row center-container">
+        <div class="col-md-offset-1 col-md-10">
+          <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <a class="panel panel-default first" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+              <div class="panel-heading clickable-panel" role="tab" id="headingOne">
+                <h5 class="panel-title">Uso de Paréntesis</h5>
+              </div>
+            </a>
+            <div id="collapseThree" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body not-clickable inside">
+                <p>Los paréntesis son importantes para agrupar operaciones y asegurar que se respeten las prioridades en las operaciones.</p>
+                <ul>
+                  <li class="correcto">
+                    <strong>Correcto:</strong> <code>(x + 2) / (x - 1)</code>
+                  </li>
+                  <li class="incorrecto">
+                    <strong>Incorrecto:</strong> <code>x + 2 / x - 1</code> (esto se interpretará de manera diferente a lo esperado).
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row center-container">
+        <div class="col-md-offset-1 col-md-10">
+          <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <a class="panel panel-default first" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
+              <div class="panel-heading clickable-panel" role="tab" id="headingOne">
+                <h5 class="panel-title">Variables</h5>
+              </div>
+            </a>
+            <div id="collapseFour" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body not-clickable inside">
+                <p>
+                  Usa siempre <code>x</code> como la variable principal en tus funciones.
+                </p>
+                <p>
+                  <strong>Ejemplos:</strong>
+                </p>
+                <ul>
+                  <li>
+                    <code>x ** 2 + 2 * x + 1</code> (función cuadrática)
+                  </li>
+                  <li>
+                    <code>sin(x) + log(x)</code> (combinación de seno y logaritmo)
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

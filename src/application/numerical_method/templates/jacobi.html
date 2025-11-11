@@ -1,0 +1,115 @@
+{% extends 'layouts/app.html' %}
+{% load static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/components/input_guidelines_card.css' %}" />
+{% endblock %}
+
+{% block title %}
+  Método de Jacobi
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <h1 class="font-weight-bold mb-4 text-center">Método de Jacobi</h1>
+    <div class="row">
+      <div class="col-md-6">
+        {% include 'components/input_guidelines/card_SNSE.html' %}
+      </div>
+      <div class="col-md-6">
+        <form method="POST" action="{% url 'numerical_method:jacobi' %}">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="matrix_size">Seleccione el tamaño de la matriz:</label>
+            <select class="form-control" id="matrix_size" name="matrix_size" required>
+              {% for i in matrix_sizes %}
+              <option value="{{ i }}">{{ i }}x{{ i }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="matrix_a">Ingrese matriz de coeficientes A (separar filas por punto y coma y columnas por espacio):</label>
+            <input type="text" class="form-control" id="matrix_a" name="matrix_a" placeholder="Ejemplo: '45 13 -4; -5 -28 4; 9 15 63'" required />
+          </div>
+          <div class="form-group">
+            <label for="vector_b">Ingrese vector b (separar elementos por espacio):</label>
+            <input type="text" class="form-control" id="vector_b" name="vector_b" placeholder="Ejemplo: '-25 82 75'" required />
+          </div>
+          <div class="form-group">
+            <label for="initial_guess">Ingrese vector inicial x0 (separar elementos por espacio):</label>
+            <input type="text" class="form-control" id="initial_guess" name="initial_guess" placeholder="Ejemplo: '2 2 2'" required />
+          </div>
+          <div class="form-group">
+            <label for="tolerance">Tolerancia:</label>
+            <input type="number" class="form-control" id="tolerance" name="tolerance" placeholder="Ingresar tolerancia" step="any" required />
+          </div>
+          <div class="form-group">
+            <label for="max_iterations">Máximo número de iteraciones:</label>
+            <input type="number" class="form-control" id="max_iterations" name="max_iterations" placeholder="Ingresar número de iteraciones" required />
+          </div>
+          <div class="mb-3">
+            <label for="precision">Seleccione tipo de precisión:</label>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="precision_type"
+                id="correct_decimals"
+                value="decimales_correctos"
+                checked
+              />
+              <label class="form-check-label" for="correct_decimals">Decimales correctos</label>
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="precision_type"
+                id="significant_numbers"
+                value="cifras_significativas"
+              />
+              <label class="form-check-label" for="significant_numbers">Cifras significativas</label>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-dark">Encontrar solución del sistema</button>
+        </form>
+      </div>
+      {% if template_data %}
+        {% include 'components/alert_message.html' with message=template_data.message_method title='Información proporcionada por el método' %}
+        {% if template_data.is_successful %}
+          {% include 'components/result_tables/result_table_SNSE.html' %}
+          {% if template_data.spectral_radius < 1 %}
+          <p class="text-success text-center mt-4">El método converge debido a que el radio espectral es menor que 1.</p>
+          {% else %}
+          <p class="text-danger text-center mt-4">El método no converge debido a que el radio espectral es mayor o igual a 1.</p>
+          {% endif %}
+
+          <!-- Mostrar la gráfica si es una matriz 2x2 -->
+          {% if template_data.solution|length == 2 %}
+          <div class="container d-flex justify-content-center mt-4">
+            <h5 class="text-center">Gráfica de la solución iterativa</h5>
+            <img src="{% static 'img/numerical_method/matrix_solution_plot.svg' %}" alt="Gráfica de la solución iterativa" class="img-fluid" width="800px" />
+          </div>
+          <div class="container d-flex justify-content-center mt-4">
+            <h5 class="text-center">Gráfica del sistema (2x2)</h5>
+            <img src="{% static 'img/numerical_method/system_plot.svg' %}" alt="Gráfica del sistema" class="img-fluid" width="800px" />
+          </div>
+          <!-- Botón para descargar la gráfica de la solución iterativa -->
+          <div class="container d-flex justify-content-center mt-3">
+            <a href="{% static 'img/numerical_method/matrix_solution_plot.svg' %}" class="btn btn-dark mx-2" download="matrix_solution_plot.svg">
+              Descargar gráfica iterativa (SVG)
+            </a>
+          </div>
+
+          <!-- Botón para descargar la gráfica del sistema de ecuaciones -->
+          <div class="container d-flex justify-content-center mt-3">
+            <a href="{% static 'img/numerical_method/system_plot.svg' %}" class="btn btn-dark mx-2" download="system_plot.svg">
+              Descargar gráfica del sistema (SVG)
+            </a>
+          </div>
+          {% endif %}
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

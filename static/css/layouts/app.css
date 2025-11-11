@@ -1,0 +1,11 @@
+* {
+    font-family: "Manrope", sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+:root {
+    accent-color: #a18262;
+}

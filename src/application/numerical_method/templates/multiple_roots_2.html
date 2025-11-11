@@ -1,0 +1,61 @@
+{% extends 'layouts/app.html' %}
+{% load static %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/components/input_guidelines_card.css' %}" />
+{% endblock %}
+{% block title %}
+  Método de Multiple raices 2
+{% endblock %}
+{% block content %}
+  <div class="container">
+    <h1 class="font-weight-bold mb-4 text-center">Método de Multiple Raices 2</h1>
+    <div class="row">
+      <div class="col-md-6">
+        {% include 'components/input_guidelines/card_SNENL.html' %}
+      </div>
+      <div class="col-md-6">
+        <form method="POST" action="{% url 'numerical_method:multiple_roots_2' %}">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="x0">Ingrese punto inicial:</label>
+            <input type="number" class="form-control" id="x0" name="x0" placeholder="Ingresar punto inicial del invervalo" step="any" required />
+          </div>
+          <div class="form-group">
+            <label for="tolerance">Tolerancia:</label>
+            <input type="number" class="form-control" id="tolerance" name="tolerance" placeholder="Ingresar tolerancia" step="any" required />
+          </div>
+          <div class="form-group">
+            <label for="max_iterations">Máximo numero de iteraciones:</label>
+            <input type="number" class="form-control" id="max_iterations" name="max_iterations" placeholder="Ingresar número de iteraciones" required />
+          </div>
+          <div class="form-group">
+            <label for="function_f">Función a evaluar f(x):</label>
+            <input type="text" class="form-control" id="function_f" name="function_f" placeholder="Ingresar función" required />
+          </div>
+          <div class="mb-3">
+            <label for="form-check">Precisión:</label>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="precision" id="correct_decimals" value="1" checked />
+              <label class="form-check-label" for="correct_decimals">Decimales correctos</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="precision" id="significant_numbers" value="0" />
+              <label class="form-check-label" for="significant_numbers">Cifras significativas</label>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-dark">Encontrar aproximación a la raíz</button>
+        </form>
+      </div>
+      {% if template_data %}
+        {% include 'components/alert_message.html' with message=template_data.message_method title='Información proporcionada por el método' %}
+        {% if template_data.is_successful %}
+          {% include 'components/result_tables/result_table_SNENL.html' with table=template_data.table %}
+          <div class="container d-flex justify-content-center">
+            <img src="{% static 'img/numerical_method/function_plot.svg' %}" alt="Gráfica de la función" class="img-fluid" width="800px" />
+          </div>
+          {% include 'components/download_svg_button.html' %}
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

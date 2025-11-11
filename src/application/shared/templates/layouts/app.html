@@ -1,0 +1,98 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'css/layouts/app.css' %}" />
+    {% block extra_css %}
+
+    {% endblock %}
+    <title>
+      {% block title %}
+        Análisis numérico
+      {% endblock %}
+    </title>
+  </head>
+
+  <body>
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="{% url 'home:index' %}"><img src="{% static 'img/logo.png' %}" width="150" class="d-inline-block align-top" alt="" /></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">SNENL</a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <p class="text-center mx-1">
+                  <b>Soluciónes númericas a ecuaciones no lineales</b>
+                </p>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{% url 'numerical_method:bisection' %}">Bisección</a>
+                <a class="dropdown-item" href="{% url 'numerical_method:regula_falsi' %}">Regla falsa</a>
+                <a class="dropdown-item" href="{% url 'numerical_method:fixed_point' %}">Punto fijo</a>
+                <a class="dropdown-item" href="{% url 'numerical_method:newton_raphson' %}">Newton-Raphson</a>
+                <a class="dropdown-item" href="{% url 'numerical_method:secant' %}">Secante</a>
+                <a class="dropdown-item" href="{% url 'numerical_method:multiple_roots_1' %}">Raíces múltiples #1</a>
+                <a class="dropdown-item" href="{% url 'numerical_method:multiple_roots_2' %}">Raíces múltiples #2</a>
+              </div>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownSNSE" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                SNSE
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdownSNSE">
+                <p class="text-center mx-1">
+                  <b>Soluciones numéricas de sistemas de ecuaciones</b>
+                </p>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{% url 'numerical_method:jacobi' %}">Jacobi</a>
+                <a class="dropdown-item" href="{% url 'numerical_method:gauss_seidel' %}">Gauss-Seidel</a>
+                <a class="dropdown-item" href="{% url 'numerical_method:sor' %}">SOR</a>
+              </div>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownSNSE" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                IN
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdownSNSE">
+                <p class="text-center mx-1">
+                  <b>Interpolación</b>
+                </p>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{% url 'numerical_method:vandermonde' %}">Vandermonde</a>
+                <a class="dropdown-item" href="{% url 'numerical_method:newton-interpol' %}">Newton</a>
+                <a class="dropdown-item" href="{% url 'numerical_method:spline_linear' %}">Spline Lineal</a>
+                <a class="dropdown-item" href="{% url 'numerical_method:spline_cubic' %}">Spline Cubico</a>
+                <a class="dropdown-item" href="{% url 'numerical_method:lagrange' %}">Lagrange</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+
+    <main class="mt-4 mx-5">
+      {% block content %}
+
+      {% endblock %}
+    </main>
+
+    <footer class="bg-body-tertiary text-center text-md-start bg-light mt-5 p-5">
+      <div class="text-center p-2">
+        <img src="{% static 'img/logo.png' %}" width="200" class="d-inline-block align-top" alt="" />
+        <br />
+        <p class="mt-2">© 2024 Kristian Restrepo Osorio, David Lopera, Santiago Palacio Garcia, Jerónimo Cardona Osorio. Todos los derechos reservados.</p>
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+.no-border {
+    border: none;
+    width: 18rem;
+}
+
+.card:hover {
+    cursor: pointer;
+    text-decoration-color: #a18262;
+
+}
+
+.card p {
+    color: black;
+}
+
+.cards-container {
+    margin-top: 40px;
+}
+
+.center-cards .col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}

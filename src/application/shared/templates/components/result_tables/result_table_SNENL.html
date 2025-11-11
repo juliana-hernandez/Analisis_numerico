@@ -1,0 +1,24 @@
+{% if table %}
+  <div class="table-responsive">
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">i</th>
+          <th scope="col">Xn</th>
+          <th scope="col">F(Xn)</th>
+          <th scope="col">Error</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for key, row in table.items %}
+          <tr class="{% if forloop.last %}table-warning{% endif %}">
+            <th scope="row">{{ row.iteration }}</th>
+            <td>{{ row.approximate_value }}</td>
+            <td>{{ row.f_evaluated }}</td>
+            <td>{{ row.error }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endif %}

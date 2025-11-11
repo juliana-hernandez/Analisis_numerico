@@ -1,0 +1,58 @@
+{% extends 'layouts/app.html' %}
+{% load static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/components/input_guidelines_card.css' %}" />
+{% endblock %}
+
+{% block title %}
+  Método de Lagrange
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <h1 class="font-weight-bold mb-4 text-center">Método de Lagrange</h1>
+    <div class="row">
+      <div class="col-md-6">
+        {% include 'components/input_guidelines/card_I.html' %}
+      </div>
+      <div class="col-md-6">
+        <form method="POST" action="{% url 'numerical_method:lagrange' %}">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="x">Ingrese cada uno de los <b>x</b> de su conjunto de datos:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="x"
+              name="x"
+              placeholder="Ejemplo: 1 2 3 4 5"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="y">Ingrese cada uno de los <b>y</b> de su conjunto de datos:</label>
+            <input type="text" class="form-control" id="y" name="y" placeholder="Ejemplo: 1 2 3 4 5" required />
+          </div>
+          <button type="submit" class="btn btn-dark">
+            Encontrar polinomio interpolante
+          </button>
+        </form>
+      </div>
+      {% if template_data %}
+        {% include 'components/alert_message.html' with message=template_data.message_method title='Información proporcionada por el método' %}
+        {% if template_data.is_successful %}
+          <div class="overflow-auto mt-4">
+            <h2 class="font-weight-bold">Polinomio interpolante</h2>
+            <p>El polinomio interpolante de Lagrange es:</p>
+            <p><b>f(x) = </b>{{ template_data.polynomial }}</p>
+          </div>
+          <div class="container d-flex justify-content-center">
+            <img src="{% static 'img/numerical_method/function_plot.svg' %}" alt="Gráfica de la función" class="img-fluid" width="800px"/>
+          </div>
+          {% include 'components/download_svg_button.html' %}
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,79 @@
+    {% extends 'layouts/app.html' %}
+    {% load static %}
+
+    {% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/components/input_guidelines_card.css' %}" />
+    {% endblock %}
+
+    {% block title %}
+    Spline Lineal
+    {% endblock %}
+
+    {% block content %}
+    <div class="container">
+        <h1 class="font-weight-bold mb-4 text-center">Spline Lineal</h1>
+        <div class="row">
+        <div class="col-md-6">
+            {% include 'components/input_guidelines/card_I.html' %}
+        </div>
+        <div class="col-md-6">
+            <form method="POST" action="{% url 'numerical_method:spline_linear' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="x">Ingrese cada uno de los <b>x</b> de su conjunto de datos:</label>
+                <input
+                type="text"
+                class="form-control"
+                id="x"
+                name="x"
+                placeholder="Ejemplo: 1 2 3 4 5"
+                required
+                />
+            </div>
+            <div class="form-group">
+                <label for="y">Ingrese cada uno de los <b>y</b> de su conjunto de datos:</label>
+                <input
+                type="text"
+                class="form-control"
+                id="y"
+                name="y"
+                placeholder="Ejemplo: 1 4 9 16 25"
+                required
+                />
+            </div>
+            <button type="submit" class="btn btn-dark">
+                Calcular Spline Lineal
+            </button>
+            </form>
+        </div>
+        {% if template_data %}
+            {% include 'components/alert_message.html' with message=template_data.message_method title='Información proporcionada por el método' %}
+            {% if template_data.is_successful %}
+            <div class="overflow-auto mt-4">
+                <h2 class="font-weight-bold">Tramos del Spline Lineal</h2>
+                <p>Los tramos generados por el spline lineal son:</p>
+                <ul>
+                    {% if template_data.tramos %}
+                        <h3>Tramos del Spline Lineal</h3>
+                        <ul>
+                            {% for tramo in template_data.tramos %}
+                                <li>{{ tramo }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </ul>
+            </div>
+            <div class="container d-flex justify-content-center">
+                <img src="{% static 'img/numerical_method/spline_linear_plot.svg' %}" alt="Gráfica del Spline Lineal" class="img-fluid" width="800px"/>
+            </div>
+            <!-- Botón para descargar el gráfico -->
+            <div class="container d-flex justify-content-center mt-3">
+                <a href="{% static 'img/numerical_method/spline_linear_plot.svg' %}" class="btn btn-dark" download="spline_cubic_plot.svg">
+                    Descargar SVG
+                </a>
+                </div>
+            {% endif %}
+        {% endif %}
+        </div>
+    </div>
+    {% endblock %}
