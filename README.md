@@ -1,8 +1,8 @@
 # Analisis numerico - Juliana Hernandez Montoya
 
-Analisis numerico is a web application designed to solve numerical methods. It is a simple application with a great user interface and is responsive for use on any device.
+πewton is a web page designed to solve numerical methods.
 
-The methods that our application solves are:
+The methods that πewton solves are:
 - Bisection Method
 - False Position Method
 - Fixed Point Method
@@ -27,14 +27,14 @@ The methods that our application solves are:
 
 1. **Clone the repository**
    ```bash
-   git clone git@github.com:kristianrpo/XNum.git
-   cd XNum
+   git clone git@github.com:juliana-hernandez/Analisis_numerico.git
+   cd Analisis_numerico
    ```
 
 2. **Create a virtual environment (optional but recommended)**
    ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   python -m venv .venv
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
    ```
 
 3. **Install dependencies**
@@ -43,10 +43,6 @@ The methods that our application solves are:
    ```
 
 4. **Create environment variables**
-   - Copy the `.env.example` file to `.env`:
-     ```bash
-     cp .env.example .env
-     ```
    - Modify the `.env` file with the appropriate configurations as needed.
 
 5. **Run the server**
@@ -55,7 +51,8 @@ The methods that our application solves are:
    ```
 
 6. **Access the application**
-   - Open your browser and visit: [http://127.0.0.1:8000/](http://127.0.0.1:8000/).
+   - Open your browser and visit: [http://127.0.0.1:8000/]
+  
 ## Notes
 - This project does not execute migrations as it does not use a database.
 - To add additional features, follow Django's structure for views, templates, and URLs.

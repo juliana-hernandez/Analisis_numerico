@@ -1,4 +1,16 @@
-{% extends 'layouts/app.html' %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!--Título de la pestaña-->
+  <title>πewton</title>
+
+  <!--Ícono-->
+  <link rel="icon" type="image/png" href="static/img/Loguito.png" />
+  
+  {% extends 'layouts/app.html' %}
 
 {% load static %}
 
@@ -6,32 +18,24 @@
   <link rel="stylesheet" href="{% static 'css/home/index.css' %}" />
 {% endblock %}
 
-{% block title %}
-  Home Page
-{% endblock %}
-
 {% block content %}
-  <section class="mb-5">
-    <div class="">
-      <div class="row align-items-center g-0">
-        <div class="col-xl-6 col-lg-6 col-md-12">
-          <div>
-            <h1 class="text-black display-4 fw-bold pe-lg-8">Resuelve problemas con precisión utilizando XNum</h1>
-            <p class="text-black-50 mb-4 lead">Descubre la eficiencia de los métodos numéricos para encontrar soluciones rapidamente. ¡Empieza a optimizar tus resultados ahora!</p>
-            <a href="#senl-section" class="btn btn-dark mb-2 mr-2">Encuentra SNENL</a>
-            <a href="#systems-section" class="btn btn-dark mb-2 mr-2">Encuentra SNSE</a>
-            <a href="#interpolation-section" class="btn btn-dark mb-2 mr-2">Encuentra IN</a>
-          </div>
-        </div>
-        <div class="col-xl-6 col-lg-6 col-md-12 text-lg-end text-center pt-6 mt-5">
-          <img src="{% static 'img/home/person.jpg' %}" alt="" class="img-fluid" />
-        </div>
-      </div>
-    </div>
-  </section>
+ <section class="text-center py-5 bg-light">
+  <div class="container">
+    <h1 class="text-black display-4 fw-bold mb-4">
+      ¡El poder del método, sin el dolor del cálculo!
+    </h1>
+    <p class="text-black-50 lead mb-5">
+      Métodos numéricos tan rápidos que Newton aplaudiría desde su tumba.
+      ¡Empieza a optimizar tus resultados ahora!
+    </p>
+    <a href="#senl-section" class="btn btn-dark mb-2 mx-2">Ecuaciones no lineales</a>
+    <a href="#systems-section" class="btn btn-dark mb-2 mx-2">Sistemas de ecuaciones</a>
+    <a href="#interpolation-section" class="btn btn-dark mb-2 mx-2">Interpolación</a>
+  </div>
+</section>
 
   <section id="senl-section">
-    <h2 class="font-weight-bold">Soluciones númericas a ecuaciones no lineales (SNENL)</h2>
+    <h2 class="font-weight-bold">Soluciones númericas a ecuaciones no lineales</h2>
     <p class="text-secondary">Descubre métodos numéricos que permiten encontrar aproximaciones para las raíces de ecuaciones no lineales</p>
     <div class="cards-container center-cards">
       <div class="row">
