@@ -58,9 +58,11 @@ class LagrangeView(TemplateView):
         sorted_points = sorted(points, key=lambda point: point[0])
         
         # Ejecutar el método de Lagrange
+        show_error_report = (request.POST.get("show_error_report") == "on")
         method_response = self.method_service.solve(
             x=x_values,
             y=y_values,
+            show_error_report=show_error_report,
         )
 
 

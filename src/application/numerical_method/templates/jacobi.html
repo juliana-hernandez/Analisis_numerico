@@ -71,6 +71,10 @@
               <label class="form-check-label" for="significant_numbers">Cifras significativas</label>
             </div>
           </div>
+          <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="show_error_report" name="show_error_report" />
+            <label class="form-check-label" for="show_error_report">Generar informe de errores</label>
+          </div>
           <button type="submit" class="btn btn-dark">Encontrar solución del sistema</button>
         </form>
       </div>
@@ -78,6 +82,33 @@
         {% include 'components/alert_message.html' with message=template_data.message_method title='Información proporcionada por el método' %}
         {% if template_data.is_successful %}
           {% include 'components/result_tables/result_table_SNSE.html' %}
+          {% if template_data.error_entries %}
+          <div class="container mt-4">
+            <h2 class="text-center font-weight-bold">Informe de errores</h2>
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Iteración</th>
+                    <th>Tipo</th>
+                    <th>Valor</th>
+                    <th>Tiempo (s)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for entry in template_data.error_entries %}
+                  <tr>
+                    <td>{{ entry.iteration }}</td>
+                    <td>{{ entry.type }}</td>
+                    <td>{{ entry.value }}</td>
+                    <td>{{ entry.time_elapsed }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          {% endif %}
           {% if template_data.spectral_radius < 1 %}
           <p class="text-success text-center mt-4">El método converge debido a que el radio espectral es menor que 1.</p>
           {% else %}

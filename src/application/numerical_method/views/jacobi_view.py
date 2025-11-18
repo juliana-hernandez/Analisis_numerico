@@ -73,6 +73,7 @@ class JacobiView(TemplateView):
             tolerance=tolerance,
             max_iterations=max_iterations,
             precision_type=precision_type,  # Pasar el tipo de precisión al servicio
+            show_error_report=(request.POST.get("show_error_report") == "on"),
         )
 
         # Verificación de éxito y almacenamiento de la respuesta

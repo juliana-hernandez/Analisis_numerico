@@ -1,4 +1,5 @@
 import numpy as np
+import time
 from src.application.numerical_method.interfaces.matrix_method import MatrixMethod
 from src.application.shared.utils.plot_matrix_solution import plot_matrix_solution, plot_system_equations
 
@@ -21,9 +22,11 @@ class GaussSeidelService(MatrixMethod):
 
         n = len(b)
         x1 = np.zeros_like(x0)
-        current_error = tolerance + 1
+        current_error = float("inf")
         current_iteration = 0
         table = {}
+        show_error_report = kwargs.get("show_error_report", False)
+        error_entries = []
 
         # Inicialización de matrices para el cálculo de T y C
         D = np.diag(np.diag(A))
@@ -34,22 +37,53 @@ class GaussSeidelService(MatrixMethod):
         T = np.linalg.inv(D - L).dot(U)
         spectral_radius = max(abs(np.linalg.eigvals(T)))
 
-        while current_error > tolerance and current_iteration < max_iterations:
-            # Iteración de Gauss-Seidel
+        x_prev = x0.copy()
+        while current_iteration < max_iterations:
+            iter_start = time.perf_counter()
+
+            # Iteración de Gauss-Seidel (actualizamos en x1 usando valores nuevos para índices < i)
+            x1 = x_prev.copy()
             for i in range(n):
-                sum_others = np.dot(A[i, :i], x1[:i]) + np.dot(A[i, i + 1:], x1[i + 1:])
+                sum_others = np.dot(A[i, :i], x1[:i]) + np.dot(A[i, i + 1:], x_prev[i + 1:])
                 x1[i] = (b[i] - sum_others) / A[i, i]
 
-            current_error = np.linalg.norm(x1 - x0, ord=np.inf)
+            # Diferencia entre iteraciones
+            diff = x1 - x_prev
+
+            # Calcular métricas de error
+            with np.errstate(divide="ignore", invalid="ignore"):
+                arr_abs = np.abs(diff)
+                val_abs = float(np.nanmax(arr_abs)) if arr_abs.size > 0 else 0.0
+
+                denom1 = np.abs(x1)
+                arr_rel1 = np.where(denom1 != 0, np.abs(diff) / denom1, np.inf)
+                val_rel1 = float(np.nanmax(arr_rel1))
+
+                denom2 = np.abs(x_prev)
+                arr_rel2 = np.where(denom2 != 0, np.abs(diff) / denom2, np.inf)
+                val_rel2 = float(np.nanmax(arr_rel2))
+
+                arr_rel3 = np.abs(diff) * np.abs(x1)
+                val_rel3 = float(np.nanmax(arr_rel3))
+
+                arr_rel4 = np.abs(x1)
+                val_rel4 = float(np.nanmax(arr_rel4))
+
+            iter_end = time.perf_counter()
+            iter_duration = iter_end - iter_start
 
             # Aplicar precisión según el tipo seleccionado
             if precision == 1:  # Decimales correctos
-                x1_rounded = [round(value, len(str(tolerance).split(".")[1])) for value in x1]
-                error_rounded = round(current_error, len(str(tolerance).split(".")[1]))
+                decimals = len(str(tolerance).split(".")[1]) if "." in str(tolerance) else 0
+                x1_rounded = [round(value, decimals) for value in x1]
+                error_rounded = round(float(np.nanmax(np.abs(diff))), decimals)
             elif precision == 0:  # Cifras significativas
                 significant_digits = len(str(tolerance).replace("0.", ""))
                 x1_rounded = [float(f"{value:.{significant_digits}g}") for value in x1]
-                error_rounded = float(f"{current_error:.{significant_digits}g}")
+                error_rounded = float(f"{float(np.nanmax(np.abs(diff))):.{significant_digits}g}")
+            else:
+                x1_rounded = x1.tolist()
+                error_rounded = float(np.nanmax(np.abs(diff)))
 
             # Guardamos la información de la iteración actual
             table[current_iteration + 1] = {
@@ -58,9 +92,22 @@ class GaussSeidelService(MatrixMethod):
                 "Error": error_rounded,
             }
 
+            # Añadir informe de errores plano si se pidió
+            if show_error_report:
+                error_entries.extend([
+                    {"iteration": current_iteration + 1, "type": "Error absoluto", "value": val_abs, "time_elapsed": iter_duration},
+                    {"iteration": current_iteration + 1, "type": "Error relativo 1", "value": val_rel1, "time_elapsed": iter_duration},
+                    {"iteration": current_iteration + 1, "type": "Error relativo 2", "value": val_rel2, "time_elapsed": iter_duration},
+                    {"iteration": current_iteration + 1, "type": "Error relativo 3", "value": val_rel3, "time_elapsed": iter_duration},
+                    {"iteration": current_iteration + 1, "type": "Error relativo 4", "value": val_rel4, "time_elapsed": iter_duration},
+                ])
+
             # Preparación para la siguiente iteración
-            x0 = x1.copy()
             current_iteration += 1
+            x_prev = x1.copy()
+
+            if float(np.linalg.norm(diff, ord=np.inf)) <= tolerance:
+                break
 
         # Verificación de éxito o fallo tras las iteraciones
         result = {}
@@ -95,6 +142,9 @@ class GaussSeidelService(MatrixMethod):
         if len(A) == 2:
             plot_matrix_solution(table, x1_rounded, spectral_radius)
             plot_system_equations(A.tolist(), b.tolist(), x1_rounded)
+
+        if show_error_report:
+            result["error_entries"] = error_entries
 
         return result
 

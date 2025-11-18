@@ -1,4 +1,5 @@
 import numpy as np
+import time
 from src.application.numerical_method.interfaces.interpolation_method import (
     InterpolationMethod,
 )
@@ -10,6 +11,7 @@ class LagrangeService(InterpolationMethod):
         self,
         x: list[float],
         y: list[float],
+        show_error_report: bool = False,
     ) -> dict:
         n = len(x)
         coefficients_table = np.zeros((n, n))
@@ -34,12 +36,52 @@ class LagrangeService(InterpolationMethod):
         # Construcción del polinomio en forma de cadena
         polynomial = build_polynomial(coefficients)
 
-        return {
+        result = {
             "message_method": "El polinomio interpolante fue encontrado con éxito.",
             "polynomial": polynomial,
             "is_successful": True,
             "have_solution": True,
         }
+
+        # Generar informe de error Leave-One-Out si se solicitó
+        if show_error_report:
+            n = len(x)
+            error_entries = []
+            for i in range(n):
+                start = time.perf_counter()
+                # construir conjuntos sin el punto i
+                x_excl = [x[j] for j in range(n) if j != i]
+                y_excl = [y[j] for j in range(n) if j != i]
+                m = len(x_excl)
+                # construir matriz de vandermonde (potencias crecientes)
+                V = np.zeros((m, m))
+                for r in range(m):
+                    for c in range(m):
+                        V[r, c] = x_excl[r] ** c
+                try:
+                    coeffs = np.linalg.solve(V, y_excl)
+                    # evaluar en x[i]
+                    xval = x[i]
+                    y_pred = sum(coeffs[c] * (xval ** c) for c in range(m))
+                    abs_err = abs(y[i] - y_pred)
+                    rel_err = abs_err / abs(y[i]) if y[i] != 0 else float("inf")
+                except Exception:
+                    y_pred = None
+                    abs_err = None
+                    rel_err = None
+                duration = time.perf_counter() - start
+                error_entries.append({
+                    "iteration": i + 1,
+                    "x": x[i],
+                    "y": y[i],
+                    "predicted": y_pred,
+                    "abs_error": abs_err,
+                    "rel_error": rel_err,
+                    "time_elapsed": duration,
+                })
+            result["error_entries"] = error_entries
+
+        return result
 
     def validate_input(
         self, x_input: str, y_input: str

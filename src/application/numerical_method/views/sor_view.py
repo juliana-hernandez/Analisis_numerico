@@ -76,6 +76,7 @@ class SORView(TemplateView):
             max_iterations=max_iterations,
             relaxation_factor=relaxation_factor,
             precision_type=precision_type,  # Nuevo argumento para precisión
+            show_error_report=(request.POST.get("show_error_report") == "on"),
         )
 
         # Verificación de éxito y almacenamiento de la respuesta

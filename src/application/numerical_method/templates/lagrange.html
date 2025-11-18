@@ -34,6 +34,10 @@
             <label for="y">Ingrese cada uno de los <b>y</b> de su conjunto de datos:</label>
             <input type="text" class="form-control" id="y" name="y" placeholder="Ejemplo: 1 2 3 4 5" required />
           </div>
+          <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="show_error_report" name="show_error_report" />
+            <label class="form-check-label" for="show_error_report">Generar informe de errores</label>
+          </div>
           <button type="submit" class="btn btn-dark">
             Encontrar polinomio interpolante
           </button>
@@ -47,6 +51,39 @@
             <p>El polinomio interpolante de Lagrange es:</p>
             <p><b>f(x) = </b>{{ template_data.polynomial }}</p>
           </div>
+          {% if template_data.error_entries %}
+          <div class="container mt-4">
+            <h2 class="text-center font-weight-bold">Informe de errores</h2>
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Iteración</th>
+                    <th>x</th>
+                    <th>y</th>
+                    <th>Predicho</th>
+                    <th>Error absoluto</th>
+                    <th>Error relativo</th>
+                    <th>Tiempo (s)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for entry in template_data.error_entries %}
+                  <tr>
+                    <td>{{ entry.iteration }}</td>
+                    <td>{{ entry.x }}</td>
+                    <td>{{ entry.y }}</td>
+                    <td>{{ entry.predicted }}</td>
+                    <td>{{ entry.abs_error }}</td>
+                    <td>{{ entry.rel_error }}</td>
+                    <td>{{ entry.time_elapsed }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          {% endif %}
           <div class="container d-flex justify-content-center">
             <img src="{% static 'img/numerical_method/function_plot.svg' %}" alt="Gráfica de la función" class="img-fluid" width="800px"/>
           </div>

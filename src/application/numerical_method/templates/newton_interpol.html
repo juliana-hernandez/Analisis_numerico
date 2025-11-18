@@ -34,9 +34,17 @@
             <label for="y">Ingrese cada uno de los <b>y</b>(Use el espacio para separarlos):</label>
             <input type="text" class="form-control" id="y" name="y" placeholder="Ejemplo: 1 2 3 4 5" required />
           </div>
+          <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="show_error_report" name="show_error_report" />
+            <label class="form-check-label" for="show_error_report">Generar informe de errores</label>
+          </div>
           <div class="form-group">
-            <label for="add">Ingrese un dato adicional <b>(x,y)</b> separado con espacio:</label>
-            <input type="text" class="form-control" id="y" name="y" placeholder="Ejemplo: 1 2 3 4 5" required />
+            <label for="x_extra">Opcional: ingrese un dato adicional <b>X</b>:</label>
+            <input type="text" class="form-control" id="x_extra" name="x_extra" placeholder="Ejemplo: 6 o 2.5" />
+          </div>
+          <div class="form-group">
+            <label for="y_extra">Opcional: ingrese un dato adicional <b>Y</b>:</label>
+            <input type="text" class="form-control" id="y_extra" name="y_extra" placeholder="Ejemplo: 36 o 15.25" />
           </div>
           <button type="submit" class="btn btn-dark">
             Encontrar polinomio interpolante
@@ -51,6 +59,50 @@
             <p>El polinomio interpolante de Newton es:</p>
             <p><b>f(x) = </b>{{ template_data.polynomial }}</p>
           </div>
+          {% if template_data.error_entries %}
+          <div class="container mt-4">
+            <h2 class="text-center font-weight-bold">Informe de errores (LOO)</h2>
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Iteración</th>
+                    <th>x</th>
+                    <th>y</th>
+                    <th>Predicho</th>
+                    <th>Error absoluto</th>
+                    <th>Error relativo</th>
+                    <th>Tiempo (s)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for entry in template_data.error_entries %}
+                  <tr>
+                    <td>{{ entry.iteration }}</td>
+                    <td>{{ entry.x }}</td>
+                    <td>{{ entry.y }}</td>
+                    <td>{{ entry.predicted }}</td>
+                    <td>{{ entry.abs_error }}</td>
+                    <td>{{ entry.rel_error }}</td>
+                    <td>{{ entry.time_elapsed }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          {% endif %}
+          {% if template_data.truncation_error is not None %}
+          <div class="overflow-auto mt-4">
+            <h2 class="font-weight-bold">Error de truncamiento</h2>
+            {% if template_data.truncation_error %}
+              <p>Para x = <b>{{ template_data.x_extra }}</b>, y real = <b>{{ template_data.y_extra }}</b>, la predicción del polinomio es <b>{{ template_data.truncation_predicted }}</b>.</p>
+              <p><b>Error de truncamiento = </b>{{ template_data.truncation_error }}</p>
+            {% else %}
+              <p>{{ template_data.truncation_message }}</p>
+            {% endif %}
+          </div>
+          {% endif %}
           <div class="container d-flex justify-content-center">
             <img src="{% static 'img/numerical_method/function_plot.svg' %}" alt="Gráfica de la función" class="img-fluid" width="800px"/>
           </div>

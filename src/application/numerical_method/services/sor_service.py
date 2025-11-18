@@ -1,4 +1,5 @@
 import numpy as np
+import time
 from src.application.numerical_method.interfaces.matrix_method import MatrixMethod
 from src.application.shared.utils.plot_matrix_solution import plot_matrix_solution, plot_system_equations
 
@@ -23,6 +24,8 @@ class SORService(MatrixMethod):
         n = len(b)
         x = x0.copy()
         table = {}
+        show_error_report = kwargs.get("show_error_report", False)
+        error_entries = []
 
         # Inicialización de matrices para el cálculo de T y C
         D = np.diag(np.diag(A))
@@ -38,29 +41,66 @@ class SORService(MatrixMethod):
 
         # Iteración SOR
         while current_error > tolerance and current_iteration < max_iterations:
+            iter_start = time.perf_counter()
             x_new = x.copy()
             for i in range(n):
                 sum_others = np.dot(A[i, :i], x_new[:i]) + np.dot(A[i, i + 1:], x[i + 1:])
                 x_new[i] = (1 - relaxation_factor) * x[i] + (relaxation_factor / A[i, i]) * (b[i] - sum_others)
 
             # Calcular el error como norma infinito de la diferencia
-            current_error = np.linalg.norm(x_new - x, ord=np.inf)
+            diff = x_new - x
+            current_error = float(np.linalg.norm(diff, ord=np.inf))
+
+            iter_end = time.perf_counter()
+            iter_duration = iter_end - iter_start
 
             # Aplicar precisión al vector de soluciones y al error
             if precision_type == 1:  # Decimales correctos
-                x_new = np.round(x_new, int(-np.floor(np.log10(tolerance))))
-                current_error = round(current_error, int(-np.floor(np.log10(tolerance))))
+                decimals = int(-np.floor(np.log10(tolerance))) if tolerance != 0 else 0
+                x_new_rounded = np.round(x_new, decimals).tolist()
+                error_rounded = round(current_error, decimals)
             elif precision_type == 0:  # Cifras significativas
                 factor = 10 ** int(np.ceil(np.log10(abs(1 / tolerance))))
-                x_new = np.round(x_new * factor) / factor
-                current_error = round(current_error * factor) / factor
+                x_new_rounded = (np.round(x_new * factor) / factor).tolist()
+                error_rounded = round(current_error * factor) / factor
+            else:
+                x_new_rounded = x_new.tolist()
+                error_rounded = current_error
 
             # Guardar información en la tabla para la iteración actual
             table[current_iteration + 1] = {
                 "iteration": current_iteration + 1,
-                "X": x_new.tolist(),
-                "Error": current_error,
+                "X": x_new_rounded,
+                "Error": error_rounded,
             }
+
+            # Calcular métricas de error solicitadas y agregarlas al informe si se pidió
+            if show_error_report:
+                with np.errstate(divide="ignore", invalid="ignore"):
+                    arr_abs = np.abs(diff)
+                    val_abs = float(np.nanmax(arr_abs)) if arr_abs.size > 0 else 0.0
+
+                    denom1 = np.abs(x_new)
+                    arr_rel1 = np.where(denom1 != 0, np.abs(diff) / denom1, np.inf)
+                    val_rel1 = float(np.nanmax(arr_rel1))
+
+                    denom2 = np.abs(x)
+                    arr_rel2 = np.where(denom2 != 0, np.abs(diff) / denom2, np.inf)
+                    val_rel2 = float(np.nanmax(arr_rel2))
+
+                    arr_rel3 = np.abs(diff) * np.abs(x_new)
+                    val_rel3 = float(np.nanmax(arr_rel3))
+
+                    arr_rel4 = np.abs(x_new)
+                    val_rel4 = float(np.nanmax(arr_rel4))
+
+                error_entries.extend([
+                    {"iteration": current_iteration + 1, "type": "Error absoluto", "value": val_abs, "time_elapsed": iter_duration},
+                    {"iteration": current_iteration + 1, "type": "Error relativo 1", "value": val_rel1, "time_elapsed": iter_duration},
+                    {"iteration": current_iteration + 1, "type": "Error relativo 2", "value": val_rel2, "time_elapsed": iter_duration},
+                    {"iteration": current_iteration + 1, "type": "Error relativo 3", "value": val_rel3, "time_elapsed": iter_duration},
+                    {"iteration": current_iteration + 1, "type": "Error relativo 4", "value": val_rel4, "time_elapsed": iter_duration},
+                ])
 
             # Preparar para la siguiente iteración
             x = x_new
@@ -100,6 +140,9 @@ class SORService(MatrixMethod):
         if len(A) == 2:
             plot_matrix_solution(table, x.tolist(), spectral_radius)
             plot_system_equations(A.tolist(), b.tolist(), x.tolist())
+
+        if show_error_report:
+            result["error_entries"] = error_entries
 
         return result
 
