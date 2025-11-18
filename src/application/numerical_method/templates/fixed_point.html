@@ -36,7 +36,7 @@
             <input type="text" class="form-control" id="function_f" name="function_f" placeholder="Ingresar función" required />
           </div>
           <div class="form-group">
-            <label for="function_g">Fución equivalente g(x):</label>
+            <label for="function_g">Fución equivalente g(x) [Despeja x = g(x)]:</label>
             <input type="text" class="form-control" id="function_g" name="function_g" placeholder="Ingresar función derivada" required />
           </div>
           <div class="mb-3">
@@ -64,7 +64,6 @@
           <div class="container d-flex justify-content-center">
             <img src="{% static 'img/numerical_method/function_plot.svg' %}" alt="Gráfica de la función" class="img-fluid" width="800px" />
           </div>
-          {% include 'components/download_svg_button.html' %}
         {% endif %}
       {% endif %}
     </div>
