@@ -1,4 +1,5 @@
 import math
+import time
 from src.application.shared.utils.plot_function import plot_function
 from src.application.numerical_method.interfaces.iterative_method import (
     IterativeMethod,
@@ -37,6 +38,9 @@ class FixedPointService(IterativeMethod):
             # Almacenamos la información de la iteración actual en la tabla.
             table[current_iteration] = {}
 
+            # Medición de tiempo de la iteración
+            start_time = time.perf_counter()
+
             try:
                 # Evaluamos el punto inicial en la función g(x) que es equivalente a f(x)
                 x = x0
@@ -46,6 +50,8 @@ class FixedPointService(IterativeMethod):
                 x = g
                 f = eval(function_f)
             except Exception as e:
+                end_time = time.perf_counter()
+                table[current_iteration]["time_elapsed"] = end_time - start_time
                 return {
                     "message_method": f"El x evaluado en g(x) no pertenece al dominio de la función, la descripción de este error fué: {str(e)}.",
                     "table": table,
@@ -83,6 +89,8 @@ class FixedPointService(IterativeMethod):
 
             # Si la función evaluada en el valor aproximado es cero, hemos encontrado la raíz exacta.
             if f == 0:
+                end_time = time.perf_counter()
+                table[current_iteration]["time_elapsed"] = end_time - start_time
                 return {
                     "message_method": "{} es raiz de f(x)".format(g),
                     "table": table,
@@ -93,6 +101,8 @@ class FixedPointService(IterativeMethod):
 
             # Si el error es menor que la tolerancia especificada, aceptamos el valor aproximado como una aproximación de la raíz.
             elif current_error < tolerance:
+                end_time = time.perf_counter()
+                table[current_iteration]["time_elapsed"] = end_time - start_time
                 return {
                     "message_method": "{} es una aproximación de la raiz de f(x) con un error de {}".format(
                         g, current_error
@@ -105,6 +115,10 @@ class FixedPointService(IterativeMethod):
             else:
                 # Se define que el g será para la siguiente iteración el valor para el cual ingresar en g(x)
                 x0 = g
+
+                # Finalizamos la medición de tiempo para esta iteración
+                end_time = time.perf_counter()
+                table[current_iteration]["time_elapsed"] = end_time - start_time
 
                 # Incrementamos el contador de iteraciones.
                 current_iteration += 1

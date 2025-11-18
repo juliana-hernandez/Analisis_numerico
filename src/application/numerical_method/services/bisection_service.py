@@ -1,4 +1,5 @@
 import math
+import time
 from src.application.shared.utils.plot_function import plot_function
 from src.application.numerical_method.interfaces.interval_method import (
     IntervalMethod,
@@ -69,6 +70,9 @@ class BisectionService(IntervalMethod):
             # Almacenamos la información de la iteración actual en la tabla.
             table[current_iteration] = {}
 
+            # Medición de tiempo de la iteración
+            start_time = time.perf_counter()
+
             # Calculamos el punto medio del intervalo actual.
             Xn = (interval[0] + interval[1]) / 2
 
@@ -77,6 +81,8 @@ class BisectionService(IntervalMethod):
                 x = Xn
                 f = eval(function_f)
             except Exception as e:
+                end_time = time.perf_counter()
+                table[current_iteration]["time_elapsed"] = end_time - start_time
                 return {
                     "message_method": f"Error al evaluar la función en el punto medio: {str(e)}.",
                     "table": table,
@@ -114,6 +120,8 @@ class BisectionService(IntervalMethod):
 
             # Si la función evaluada en el punto medio es cero, hemos encontrado la raíz exacta.
             if f == 0:
+                end_time = time.perf_counter()
+                table[current_iteration]["time_elapsed"] = end_time - start_time
                 return {
                     "message_method": "{} es raiz de f(x)".format(Xn),
                     "table": table,
@@ -124,6 +132,8 @@ class BisectionService(IntervalMethod):
 
             # Si el error es menor que la tolerancia especificada, aceptamos el punto medio como una aproximación de la raíz.
             elif current_error < tolerance:
+                end_time = time.perf_counter()
+                table[current_iteration]["time_elapsed"] = end_time - start_time
                 return {
                     "message_method": "{} es una aproximación de la raiz de f(x) con un error de {}".format(
                         Xn, current_error
@@ -147,6 +157,10 @@ class BisectionService(IntervalMethod):
             fa = eval(function_f)
             x = interval[1]
             fb = eval(function_f)
+
+            # Finalizamos la medición de tiempo para esta iteración
+            end_time = time.perf_counter()
+            table[current_iteration]["time_elapsed"] = end_time - start_time
 
             # Incrementamos el contador de iteraciones.
             current_iteration += 1

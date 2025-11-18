@@ -1,5 +1,6 @@
 import sympy as sp
 import math
+import time
 from src.application.numerical_method.interfaces.iterative_method import (
     IterativeMethod,
 )
@@ -42,12 +43,17 @@ class MultipleRoots2Service(IterativeMethod):
 
         # Bucle del método de raíces múltiples con segunda derivada
         while current_iteration <= max_iterations:
+            # Medición de tiempo de la iteración
+            start_time = time.perf_counter()
+
             try:
                 fx = f(x0_current)
                 f_prime_x = f_prime(x0_current)
                 f_double_prime_x = f_double_prime(x0_current)
 
                 if f_prime_x == 0 or f_double_prime_x == 0:
+                    end_time = time.perf_counter()
+                    table[current_iteration] = {"time_elapsed": end_time - start_time}
                     return {
                         "message_method": f"Una de las derivadas es cero en x = {x0_current}. No se puede continuar.",
                         "table": table,
@@ -61,6 +67,8 @@ class MultipleRoots2Service(IterativeMethod):
                     f_prime_x**2 - fx * f_double_prime_x
                 )
             except Exception as e:
+                end_time = time.perf_counter()
+                table[current_iteration] = {"time_elapsed": end_time - start_time}
                 return {
                     "message_method": f"Error al evaluar la función o sus derivadas: {str(e)}.",
                     "table": {},
@@ -78,6 +86,10 @@ class MultipleRoots2Service(IterativeMethod):
                 "f_double_prime_evaluated": f_double_prime_x,
                 "next_x": x_next,
             }
+
+            # Finalizamos la medición de tiempo para esta iteración
+            end_time = time.perf_counter()
+            table[current_iteration]["time_elapsed"] = end_time - start_time
 
             # Calcular el error dependiendo de la precisión
             if current_iteration > 1:

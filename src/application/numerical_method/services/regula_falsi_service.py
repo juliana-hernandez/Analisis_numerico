@@ -1,4 +1,5 @@
 import math
+import time
 from src.application.shared.utils.plot_function import plot_function
 from src.application.numerical_method.interfaces.interval_method import (
     IntervalMethod,
@@ -69,6 +70,9 @@ class RegulaFalsiService(IntervalMethod):
             # Almacenamos la información de la iteración actual en la tabla.
             table[current_iteration] = {}
 
+            # Medición de tiempo de la iteración
+            start_time = time.perf_counter()
+
             # Calculamos el valor aproximado que se obtiene a partir de la intersección de y=0 y la recta secante utilizando el intervalo actual del intervalo actual.
             Xn = (interval[0] * fb - interval[1] * fa) / (fb - fa)
 
@@ -76,6 +80,8 @@ class RegulaFalsiService(IntervalMethod):
                 x = Xn
                 f = eval(function_f)
             except Exception as e:
+                end_time = time.perf_counter()
+                table[current_iteration]["time_elapsed"] = end_time - start_time
                 return {
                     "message_method": f"Error al evaluar la función en Xn: {str(e)}.",
                     "table": table,
@@ -113,6 +119,8 @@ class RegulaFalsiService(IntervalMethod):
 
             # Si la función evaluada en el valor aproximado es cero, hemos encontrado la raíz exacta.
             if f == 0:
+                end_time = time.perf_counter()
+                table[current_iteration]["time_elapsed"] = end_time - start_time
                 return {
                     "message_method": "{} es raiz de f(x)".format(Xn),
                     "table": table,
@@ -123,6 +131,8 @@ class RegulaFalsiService(IntervalMethod):
 
             # Si el error es menor que la tolerancia especificada, aceptamos el valor aproximado como una aproximación de la raíz.
             elif current_error < tolerance:
+                end_time = time.perf_counter()
+                table[current_iteration]["time_elapsed"] = end_time - start_time
                 return {
                     "message_method": "{} es una aproximación de la raiz de f(x) con un error de {}".format(
                         Xn, current_error
@@ -146,6 +156,10 @@ class RegulaFalsiService(IntervalMethod):
             fa = eval(function_f)
             x = interval[1]
             fb = eval(function_f)
+
+            # Finalizamos la medición de tiempo para esta iteración
+            end_time = time.perf_counter()
+            table[current_iteration]["time_elapsed"] = end_time - start_time
 
             # Incrementamos el contador de iteraciones.
             current_iteration += 1

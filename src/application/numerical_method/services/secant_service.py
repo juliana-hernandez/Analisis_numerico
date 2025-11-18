@@ -1,4 +1,5 @@
 import math
+import time
 from src.application.numerical_method.interfaces.interval_method import (
     IntervalMethod,
 )
@@ -36,6 +37,8 @@ class SecantService(IntervalMethod):
 
         # Bucle del método de la secante
         while current_iteration <= max_iterations:
+            # Medición de tiempo de la iteración
+            start_time = time.perf_counter()
             # Almacenamos la información de la iteración actual en la tabla.
             table[current_iteration] = {}
             # Comprobamos si se puede continuar con la fórmula de la secante
@@ -54,6 +57,8 @@ class SecantService(IntervalMethod):
                 x = Xn
                 f = eval(function_f)
             except Exception as e:
+                end_time = time.perf_counter()
+                table[current_iteration]["time_elapsed"] = end_time - start_time
                 return {
                     "message_method": f"Error al evaluar la función en el punto aproximado: {str(e)}.",
                     "table": table,
@@ -72,6 +77,10 @@ class SecantService(IntervalMethod):
             # Para la primera iteración, el error se mantiene como infinito (no hay valor previo para comparar).
             if current_iteration == 1:
                 table[current_iteration]["error"] = current_error
+
+                # Finalizamos la medición de tiempo para esta iteración
+                end_time = time.perf_counter()
+                table[current_iteration]["time_elapsed"] = end_time - start_time
             # Calculamos el error dependiendo de la precisión
             else:
                 if precision:  # Precisión absoluta
@@ -118,6 +127,8 @@ class SecantService(IntervalMethod):
                 x = interval_b
                 f_b = eval(function_f)
             except Exception as e:
+                end_time = time.perf_counter()
+                table[current_iteration]["time_elapsed"] = end_time - start_time
                 return {
                     "message_method": f"Error durante la evaluación en el nuevo intervalo: {str(e)}.",
                     "table": table,

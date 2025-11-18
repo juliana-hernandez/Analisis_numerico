@@ -1,5 +1,6 @@
 import sympy as sp
 import math
+import time
 from src.application.numerical_method.interfaces.iterative_method import (
     IterativeMethod,
 )
@@ -38,11 +39,16 @@ class MultipleRoots1Service(IterativeMethod):
         current_iteration = 1
         # Bucle del método de raíces múltiples
         while current_iteration <= max_iterations:
+            # Medición de tiempo de la iteración
+            start_time = time.perf_counter()
+
             # Evaluar f(x) y f'(x) en el valor actual de x0
             try:
                 fx = f(x0_current)
                 f_prime_x = f_prime(x0_current)
                 if f_prime_x == 0:
+                    end_time = time.perf_counter()
+                    table[current_iteration]["time_elapsed"] = end_time - start_time
                     return {
                         "message_method": f"La derivada es cero en x = {x0_current}. No se puede continuar.",
                         "table": table,
@@ -53,6 +59,8 @@ class MultipleRoots1Service(IterativeMethod):
                 # Calcular el siguiente valor de x usando el método
                 x_next = x0_current - multiplicity * (fx / f_prime_x)
             except Exception as e:
+                end_time = time.perf_counter()
+                table[current_iteration]["time_elapsed"] = end_time - start_time
                 return {
                     "message_method": f"Error al evaluar la función o su derivada: {str(e)}.",
                     "table": table,
@@ -85,6 +93,10 @@ class MultipleRoots1Service(IterativeMethod):
                     table[current_iteration]["error"] = current_error
 
             # Verificar si se ha encontrado una raíz exacta o una aproximación aceptable
+            # Finalizamos la medición de tiempo para esta iteración
+            end_time = time.perf_counter()
+            table[current_iteration]["time_elapsed"] = end_time - start_time
+
             if fx == 0:
                 return {
                     "message_method": f"{x0_current} es una raíz exacta de f(x).",

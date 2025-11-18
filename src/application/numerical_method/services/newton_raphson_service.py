@@ -1,5 +1,6 @@
 import sympy as sp
 import math
+import time
 from src.application.numerical_method.interfaces.iterative_method import (
     IterativeMethod,
 )
@@ -38,11 +39,19 @@ class NewtonService(IterativeMethod):
         points = [(x0_current, 0)]  # Para graficar
 
         while current_iteration <= max_iterations:
+            # Medición de tiempo de la iteración
+            start_time = time.perf_counter()
             # Evaluar f(x) y f'(x) en el valor actual de x0
             try:
                 fx = f(x0_current)
                 f_prime_x = f_prime(x0_current)
                 if f_prime_x == 0:
+                    end_time = time.perf_counter()
+                    # Si aún no hay entrada para esta iteración, añadimos la marca de tiempo mínima
+                    if current_iteration not in table:
+                        table[current_iteration] = {"time_elapsed": end_time - start_time}
+                    else:
+                        table[current_iteration]["time_elapsed"] = end_time - start_time
                     return self._prepare_response(
                         message=f"La derivada es cero en x = {x0_current}. No se puede continuar.",
                         table=table,
@@ -54,6 +63,11 @@ class NewtonService(IterativeMethod):
                 # Calcular el siguiente valor de x usando el método
                 x_next = x0_current - fx / f_prime_x
             except Exception as e:
+                end_time = time.perf_counter()
+                if current_iteration not in table:
+                    table[current_iteration] = {"time_elapsed": end_time - start_time}
+                else:
+                    table[current_iteration]["time_elapsed"] = end_time - start_time
                 return self._prepare_response(
                     message=f"Error al evaluar la función o su derivada: {str(e)}.",
                     table=table,
@@ -79,6 +93,10 @@ class NewtonService(IterativeMethod):
                 "error": error_value,
             }
             points.append((x0_current, fx))  # Agregar puntos para graficar
+
+            # Finalizamos la medición de tiempo para esta iteración
+            end_time = time.perf_counter()
+            table[current_iteration]["time_elapsed"] = end_time - start_time
 
             # Verificar si se ha encontrado una raíz exacta o una aproximación aceptable
             if fx == 0 or error_value < tolerance:

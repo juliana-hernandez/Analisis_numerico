@@ -7,6 +7,7 @@
           <th scope="col">Xn</th>
           <th scope="col">F(Xn)</th>
           <th scope="col">Error</th>
+          <th scope="col">Tiempo (s)</th>
         </tr>
       </thead>
       <tbody>
@@ -16,6 +17,7 @@
             <td>{{ row.approximate_value }}</td>
             <td>{{ row.f_evaluated }}</td>
             <td>{{ row.error }}</td>
+            <td>{{ row.time_elapsed|default:"-"|floatformat:6 }}</td>
           </tr>
         {% endfor %}
       </tbody>

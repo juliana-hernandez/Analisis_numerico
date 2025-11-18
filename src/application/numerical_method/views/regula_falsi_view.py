@@ -37,6 +37,8 @@ class RegulaFalsiView(TemplateView):
         max_iterations = int(request.POST.get("max_iterations"))
         function_f = request.POST.get("function_f")
         precision = int(request.POST.get("precision"))
+        # Opcional: mostrar tabla de iteraciones
+        show_table = request.POST.get("show_table") == "on"
 
         response_validation = self.method_service.validate_input(
             interval_a=interval_a,
@@ -75,6 +77,10 @@ class RegulaFalsiView(TemplateView):
             function_f=function_f,
             precision=precision,
         )
+
+        # Si el usuario no quiere la tabla, la omitimos antes de renderizar
+        if not show_table and isinstance(method_response, dict):
+            method_response["table"] = {}
 
         if method_response["is_successful"]:
             plot_function(
